@@ -1,0 +1,24 @@
+{
+    "id": "4092EC86",
+    "path": "~/ec320_labs/.gitignore",
+    "project_path": ".gitignore",
+    "type": "gitignore",
+    "hash": "817596692",
+    "contents": "",
+    "dirty": false,
+    "created": 1633319618504.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "cursorPosition": "1,9",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1633319630,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1633319630818,
+    "read_only": false,
+    "read_only_alternatives": []
+}

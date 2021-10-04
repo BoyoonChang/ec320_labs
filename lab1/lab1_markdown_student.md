@@ -9,9 +9,7 @@ output:
   pdf_document: default
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+
 # Lecture Overview
 Goals of the lesson:
 
@@ -56,7 +54,8 @@ R Markdown files are also known by their file extension: `.Rmd`.
 
 At the top of your `.Rmd` file, you should see some text sandwiched between triple dashes:
 
-```{markdown}
+
+```markdown
 ---
 title: "A title"
 author: "Your Name"
@@ -74,9 +73,7 @@ The argument `output: html_document` tells R Markdown to produce an HTML documen
 Next, you should see some R code sandwiched by a pair of back ticks:
 
 
-```{r setup2, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+
 
 
 
@@ -92,13 +89,13 @@ The code `knitr::opts_chunk$set(echo = TRUE)` specifies default options for all 
 You can add a new code chunk by clicking the `Insert` button then `R`, which results in 
 
 
-```{r}
-```
+
 
 You can write your R code of inside the code chunk:
 
 
-```{r}
+
+```r
 # Here is a comment inside of a code chunk
 library(pacman)
 p_load(tidyverse)
@@ -107,6 +104,10 @@ random_data <- tibble(
   y = 10 + x + rnorm(1000, mean = 0, sd = 1)
 )
 mean(random_data$y)
+```
+
+```
+## [1] 14.87231
 ```
 
 
@@ -149,93 +150,185 @@ R uses object-oriented programming. If you have never used this type of programm
 ### Lesson 1: Objects
 An object is an assignment between a name and a value. You assign values to names using `<-` or `=`. The first assignment symbol consists of a `<` next to a dash `-` to make it look like an arrow. 
 
-```{r}
+
+```r
 x <- 5 #assign the value of 5 to a variable called x
 # notice that this x is now in your global environment
 x # print x
 ```
 
-```{r}
+```
+## [1] 5
+```
+
+
+```r
 y = 10
 y
 ```
 
+```
+## [1] 10
+```
+
 You can combine objects together as well which lets us do some basic math operations.
-```{r}
+
+```r
 # create a new object called z that is equal to x*y
 z <- x * y
 #print z
 z
 ```
 
+```
+## [1] 50
+```
+
 **If you do not create an object, R will not save it to the global environment**. If an object is not in the global environment and you try to reference it later, R will not know what you are referring to.
 
 
 ### Math Operations
-```{r}
+
+```r
 a <- 2+3
 a
+```
 
+```
+## [1] 5
+```
+
+```r
 b<-4-5
 b
+```
 
+```
+## [1] -1
+```
+
+```r
 c<-4*2
 c
+```
 
+```
+## [1] 8
+```
+
+```r
 d<-6/3
 d
+```
 
+```
+## [1] 2
+```
+
+```r
 e<-7^2
 e
 ```
 
+```
+## [1] 49
+```
+
 ### Vectors
 You can create a vector (a list) of items in R. 
-```{r}
+
+```r
 # create a vector of 1 through 10
 vector1 <- 1:10
 vector1
 ```
 
+```
+##  [1]  1  2  3  4  5  6  7  8  9 10
+```
+
 If we want specific items, we use the `c()` function and separate the items with a comma.
-```{r}
+
+```r
 vector2 <- c(1,3,5,7,9)
 vector2
 ```
+
+```
+## [1] 1 3 5 7 9
+```
 Mathematical operations work on vectors too!
-```{r}
+
+```r
 vector2^2
+```
+
+```
+## [1]  1  9 25 49 81
 ```
 
 ### Classes
 Objects in R have different classes. Check the class of a few objects we have already created:
-```{r}
-class(x)
 
+```r
+class(x)
+```
+
+```
+## [1] "numeric"
+```
+
+```r
 class(vector1)
+```
+
+```
+## [1] "integer"
 ```
 
 There are other classes too!
 
-```{r}
+
+```r
 # create a string
 my_string <- "EC320 is my favorite class!"
 class(my_string)
 ```
 
-```{r}
+```
+## [1] "character"
+```
+
+
+```r
 # logical class
 class(2>3)
 ```
 
+```
+## [1] "logical"
+```
+
 What happens if we have a vector of characters and numbers?
-```{r}
+
+```r
 char_vector <- c(1:5, "banana", "apple")
 char_vector
+```
+
+```
+## [1] "1"      "2"      "3"      "4"      "5"      "banana" "apple"
+```
+
+```r
 #cant use mathematical operations on characters
 #char_vector^2 (note: this doesn't run; uncomment it and show them it doesn't run)
 # why?? because the entire vector is a character class!
 class(char_vector)
+```
+
+```
+## [1] "character"
 ```
 
 We will be working with data frame classes in this course, but we will cover that next week.
@@ -243,72 +336,126 @@ We will be working with data frame classes in this course, but we will cover tha
 ### Functions
 Functions are operations that can transform your created **object** in a ton of different ways. We have actually already used two functions, `c()` and `class()`. Here are a few other useful ones we will use today:
 
-```{r}
+
+```r
 #print the first few objects in vector1
 head(vector1)
+```
+
+```
+## [1] 1 2 3 4 5 6
+```
+
+```r
 #print the first 2 objects in vector1
 head(vector1, 2)
+```
+
+```
+## [1] 1 2
+```
+
+```r
 #print the last few objects in vector1
 tail(vector1)
+```
+
+```
+## [1]  5  6  7  8  9 10
+```
+
+```r
 #print last two objects in vector1
 tail(vector1, 2)
+```
 
+```
+## [1]  9 10
+```
+
+```r
 #find the mean of vector1
 mean(vector1)
+```
+
+```
+## [1] 5.5
+```
+
+```r
 #median 
 median(vector1)
+```
+
+```
+## [1] 5.5
+```
+
+```r
 #standard deviation
 sd(vector1)
+```
 
+```
+## [1] 3.02765
+```
+
+```r
 #Summary() prints summary stats
 summary(vector1)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    1.00    3.25    5.50    5.50    7.75   10.00
+```
+
+```r
 min(vector1)
+```
+
+```
+## [1] 1
+```
+
+```r
 max(vector1)
+```
+
+```
+## [1] 10
 ```
 
 
 ## Exercises
 1. Create a new variable called `my_num` that contains 5 numbers
 
-```{r}
-```
+
 
 2. Multiply `my.num` by 3
 
-```{r}
-```
+
 
 3. Create a second variable called `my.char` that contains 5 character strings
-```{r}
-```
+
 4. Combine the two variables `my.num` and `my.char` into a variable called `both`combined`
-```{r}
-```
+
 5. What is the length of `combined`? (Hint: use the `length()` function)
-```{r}
-```
+
 6. What class is `combined`? Why?
-```{r}
-```
+
 7. Divide `combined` by 3, what happens?
-```{r}
-```
+
 8. Create a vector with elements 1 2 3 4 5 6 and call it `a`
-```{r}
-```
+
 9. Create another vector with elements 10 20 30 40 50 and call it `b`
-```{r}
-```
+
 10. What happens if you try to add `a` and `b` together? Why?
-```{r}
-```
+
 11. Append the value 60 onto the vector `b` (hint: you can use the c() function)
-```{r}
-```
+
 12. Add `a` and `b` together
-```{r}
-```
+
 13. Multiply `a` and `b` together. Pay attention to how R performs operations on vectors of the same length.
-```{r}
-```
+
 

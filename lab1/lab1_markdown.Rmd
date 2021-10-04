@@ -3,8 +3,9 @@ title: "Introduction to R and R Markdown"
 author: "Jenni Putz"
 date: "9/21/2021"
 output:
-  html_document: default
+  word_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -172,6 +173,7 @@ z
 ### Math Operations
 ```{r}
 a <- 2+3
+
 a
 
 b<-4-5

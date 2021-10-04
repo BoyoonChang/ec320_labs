@@ -8,7 +8,7 @@
   - Able to create, edit, knit R Markdown document
   - Understand the notion of object-oriented programming
   - Understand basic commands in R
-- [PDF](lab1/lab1_markdown.pdf), [HTML](lab1/lab1_markdown.html), [Rmarkdown](lab1/lab1_markdown.Rmd)
+- Lab material: [PDF](lab1/lab1_markdown.pdf), [HTML](lab1/lab1_markdown.html), [Rmarkdown](lab1/lab1_markdown.Rmd)
 
 ## Lab2
 

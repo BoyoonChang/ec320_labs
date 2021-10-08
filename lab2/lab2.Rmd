@@ -1,0 +1,240 @@
+---
+title: "Lab 2 - Tidyverse"
+author: "Jenni Putz"
+date: "10/7/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Lecture Overview
+Goals of the lesson:
+
+* Students will be able to read in a csv file
+* Students will be able to manipulate data using dplyr functions
+* Create data visualizations with ggplot
+
+Instructor Notes:
+
+* Have them read in the csv (it is just the starwars dataset from the tidyverse package, but they need to know how to do read_csv() for the homework assignment).
+* Students are often confused about file paths and where their Downloads folder is. Some may ask for assistance with this.
+
+
+# Using Packages
+R is really useful because of its ability to use packages. Pacman is a package for "package management" - it helps us load multiple packages at onc.
+
+```{r}
+#install.packages("pacman")
+```
+We need to load the a package after installing it to use it by using `library()`.
+```{r}
+library(pacman)
+```
+
+Now we use the p_load function to load other packages we want to use. Today, we will use the `tidyverse()` package.
+```{r}
+p_load(tidyverse)
+```
+
+# Tidyverse
+Tidyverse is used for data wrangling. It allows you to manipulate data frames in a rather intuitive way. Tidyverse is a huge package so today we will be focusing on functions from the dplyr package (comes with tidyverse).
+
+* select(): subset columns
+* filter(): subset rows on conditions
+* arrange(): sort results
+* mutate(): create new columns by using information from other columns
+* group_by() and summarize(): create summary statisitcs on grouped data
+* count(): count discrete values
+
+## Directories
+We need to get some data before we can start working with it! Download the "Lab2.csv" file from Canvas. It should then be in your Downloads folder. 
+
+Now, we need to make sure that we are working in the same place as our data is, so that R knows where to get the csv file from. The function `getwd()` will give you the file path of your current location.
+```{r}
+getwd()
+```
+
+Now, if this is not the same location as your Downloads folder, you need to tell R to set a new working directory. You can use `setwd()` to tell R where to go. 
+
+For example, if I want to go to my Downloads folder on my mac, I can write:
+```{r}
+#setwd("/Users/jenniputz/Downloads") # commented out so it doesn't run this line!
+
+# Note, if you are on windows, your file path would start with a C:\ and use \'s
+```
+
+Now R will be working in my Downloads folder. We can read in our data using `read_csv()`. Remember that everything in R is an object, so you *must* give your data frame a name.
+
+```{r}
+our_data <- read_csv("Lab2.csv") # this should read after changing to the appropriate wd using setwd() above
+```
+
+## Dplyr Functions
+We can view our data frame by typing view(data) or by clicking the name in the global environment
+```{r}
+view(our_data)
+# Can also look at names of variables
+names(our_data)
+```
+
+### Select and Filter
+Let's select only the name, gender, and homeworld variables
+```{r}
+select(our_data, c(name, gender, homeworld))
+```
+Notice that this didn't save anything in our global environment! If you want to save this new dataframe, you have to give it a name!
+
+To select all columns except a certain one, use a minus sign
+```{r}
+select(our_data, c(-homeworld, -gender))
+```
+
+Filter the data frame to include only droids
+```{r}
+filter(our_data, species == "Droid")
+```
+
+Filter the data frame to include droids OR humans
+```{r}
+filter(our_data, species == "Droid" | species == "Human")
+```
+
+Filter the data frame to include characters taler than 100 cm and a mass over 100
+```{r}
+filter(our_data, height > 100 & mass > 100)
+```
+
+### Piping
+What if we want to do those things all in one step??? The tidyverse allows us to chain functions together with %>%. This is called a pipe and the pipe connects the LHS to the RHS (like reading a book). Let's make a new dataframe where we select the name, height, and mass. Filter out those who are shorter than 100 cm.
+```{r}
+new_df <- our_data %>% select(name, height, mass) %>% filter(height >= 100)
+new_df
+```
+
+Self check: make a new data frame where you select all columns except gender and has characters that have green skin color
+```{r}
+#example: example_df <- our_data %>% select(-gender) %>% filter(skin_color == "green")
+```
+
+
+### Arrange
+Let's arrange all of the characters by their height
+```{r}
+our_data %>% arrange(height)
+```
+
+Notice this does lowest to highest, we can do the other way too
+```{r}
+our_data %>% arrange(desc(height))
+```
+
+Self check: Arrange the characters names in alphabetical order
+```{r}
+#example: our_data %>% arrange(name)
+```
+
+### Mutate
+We can create new variables with `mutate()`. Let's create a new variable that measures height in inches instead of centimeters (2.54cm per inch)
+
+```{r}
+our_data %>% mutate(height_inches = height/2.54)
+```
+
+Notice that this new variable is *not* in the original data frame. Why? Because we didn't *assign* it to our object.
+
+```{r}
+our_data <- our_data %>% mutate(height_inches = height/2.54)
+```
+
+Self check: Create a new variable that is the sum of person's mass and height
+```{r}
+# example: our_data %>% mutate(total = height + mass)
+```
+
+### Group_by and Summarize
+This will group data together and can make summary statistics. Let's find the average height for each species
+```{r}
+our_data %>% group_by(species) %>% summarize(avg_height = mean(height))
+```
+
+Notice we have NA's! We can get rid of those
+```{r}
+our_data %>% na.omit() %>% group_by(species) %>% summarize(avg_height = mean(height))
+```
+
+### Count
+Count the number of each species
+```{r}
+our_data %>% count(species)
+```
+
+
+# Plotting 
+For this part of the lecture, we will use the mpg dataset that is built in the tidyverse package. It contains fuel economy data for 38 models of cars in 1999 and 2008. Let’s take a look at the data. Recall, we can preview some of our data by using the `head()` function and can look at variable names using `names()`.
+
+```{r}
+head(mpg)
+```
+
+```{r}
+names(mpg)
+```
+
+## Using Base R
+Base R’s plotting function is `plot()`. The fastest way to make plots in Base R is with the qplot() function - it makes quick plots.
+
+```{r}
+qplot(x = displ, y = hwy, data = mpg)
+```
+
+## Using ggplot
+The basic setup of making a ggplot requires three things: the data, the aesthetic mapping, and a geom. The aesthetic mappings describe how variables in the data are mapped to visual properties (aesthetics) of geoms, like which variables are on the axes, the variable to color or fill by, etc. The geoms tell R how to draw the data like points, lines, columns, etc.
+
+In general, we can make a ggplot by typing the following: ggplot(data = <DATA>) + <geom_function>(mapping = aes(<MAPPING))
+
+The way ggplot works is by adding layers. We can add a new layer with the + sign. Let’s build a ggplot step by step. First, start with ggplot() and tell R what data we are using.
+
+```{r}
+ggplot(data = mpg)
+```
+
+Why did this make a blank graph? Well, we haven’t given R the aesthetic mapping yet so it doesn’t know what to put on top of the base layer. Let’s add the x and y variables.
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) # note you can put the mapping here or in the geom
+```
+
+Now we have a graph with axes and gridlines but no information on the graph. To get data on the graph, we need to tell R how we want to draw the data with a geom. To make a scatterplot, we use geom_point().
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + geom_point()
+```
+
+This looks like the plot we made earlier but with a lot of extra steps. So why did we do all this extra work to learn ggplot? Well, ggplot allows us to visualize data in ways that the base plot package does not. For example, we can color the points by a variable. We can also add themes by adding a layer to the graph. There are some themes built into the ggplot package and the ggthemes package has even more. You can also make your own custom theme!
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = class)) + geom_point() + theme_minimal()
+```
+
+
+We can also change the size of the dots by a variable using size.
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, size = class)) + theme_light()
+```
+
+
+Of course, we can make many different types of graphs besides scatterplots using ggplot. Here is how we would fit a line through data points:
+```{r}
+ggplot(data = mpg) + 
+  geom_smooth(mapping = aes(x = displ, y = hwy, linetype = drv))
+```
+
+We can also combine multiple geoms by adding multiple layers.
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  geom_smooth(mapping = aes(x = displ, y = hwy))
+```

@@ -16,6 +16,6 @@
   - Students will be able to manipulate data using dplyr functions
   - Create data visualizations with ggplot
 
-- Lab material: [Rmarkdown](lab2/lab2.Rmd)
+- Lab material: [Rmarkdown](lab2/lab2.Rmd), [Markdown](lab2/lab2.md)
 
 

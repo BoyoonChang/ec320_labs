@@ -47,7 +47,7 @@ Tidyverse is used for data wrangling. It allows you to manipulate data frames in
 * filter(): subset rows on conditions
 * arrange(): sort results
 * mutate(): create new columns by using information from other columns
-* group_by() and summarize(): create summary statisitcs on grouped data
+* group_by() and summarize(): create summary statistics on grouped data
 * count(): count discrete values
 
 ## Directories

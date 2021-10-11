@@ -22,7 +22,7 @@ Instructor Notes:
 
 
 # Using Packages
-R is really useful because of its ability to use packages. Pacman is a package for "package management" - it helps us load multiple packages at onc.
+R is really useful because of its ability to use packages. Pacman is a package for "package management" - it helps us load multiple packages at once.
 
 ```{r}
 #install.packages("pacman")
@@ -67,7 +67,7 @@ For example, if I want to go to my Downloads folder on my mac, I can write:
 Now R will be working in my Downloads folder. We can read in our data using `read_csv()`. Remember that everything in R is an object, so you *must* give your data frame a name.
 
 ```{r}
-our_data <- read_csv("Lab2.csv") # this should read after changing to the appropriate wd using setwd() above
+our_data <- read_csv("lab2.csv") # this should read after changing to the appropriate wd using setwd() above
 ```
 
 ## Dplyr Functions
@@ -100,7 +100,7 @@ Filter the data frame to include droids OR humans
 filter(our_data, species == "Droid" | species == "Human")
 ```
 
-Filter the data frame to include characters taler than 100 cm and a mass over 100
+Filter the data frame to include characters taller than 100 cm and a mass over 100
 ```{r}
 filter(our_data, height > 100 & mass > 100)
 ```
@@ -108,7 +108,16 @@ filter(our_data, height > 100 & mass > 100)
 ### Piping
 What if we want to do those things all in one step??? The tidyverse allows us to chain functions together with %>%. This is called a pipe and the pipe connects the LHS to the RHS (like reading a book). Let's make a new dataframe where we select the name, height, and mass. Filter out those who are shorter than 100 cm.
 ```{r}
+select(our_data, name, height, mass)
+our_data %>% select(name, height, mass)
+#select(our_data, c(name, height, mass))
+
+# f(g(x)) == x %>% g() %>% f()
+filter(select(our_data, name, height, mass), height >= 100) # order of the function
+our_data %>% select(name, height, mass) %>% filter(height >= 100)
+
 new_df <- our_data %>% select(name, height, mass) %>% filter(height >= 100)
+
 new_df
 ```
 
@@ -126,6 +135,7 @@ our_data %>% arrange(height)
 
 Notice this does lowest to highest, we can do the other way too
 ```{r}
+?arrange
 our_data %>% arrange(desc(height))
 ```
 
@@ -186,6 +196,7 @@ Base R’s plotting function is `plot()`. The fastest way to make plots in Base 
 
 ```{r}
 qplot(x = displ, y = hwy, data = mpg)
+# Larger engines tend to produce more power, which consumes more fuel (less fuel efficient)
 ```
 
 ## Using ggplot
@@ -228,7 +239,8 @@ ggplot(data = mpg) +
 
 Of course, we can make many different types of graphs besides scatterplots using ggplot. Here is how we would fit a line through data points:
 ```{r}
-ggplot(data = mpg) + 
+# locally weighted smoothing: https://www.statisticshowto.com/lowess-smoothing/
+ggplot(data = mpg) + geom_point(aes(x = displ, y = hwy, color  = drv)) + 
   geom_smooth(mapping = aes(x = displ, y = hwy, linetype = drv))
 ```
 

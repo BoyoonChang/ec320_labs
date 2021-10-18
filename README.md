@@ -18,4 +18,11 @@
 
 - Lab material: [Rmarkdown](lab2/lab2.Rmd), [Markdown](lab2/lab2.md)
 
+## Lab3
+- Goals:
+  - Review ggplot
+  - Review R basics
+  - Go over Current Population Survey
 
+- Lab material: [Rmarkdown](lab3/Lab3.Rmd), [Markdown](lab3/Lab2.md)
+- Supplementary material: [R](lab3/supplementary_material.R) [Markdown](lab3/supplementary_material.md)

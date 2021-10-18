@@ -28,7 +28,7 @@ addition = function(param1, param2){
 }
 # param1, param2 are referred to as parameters of the addition function.
 addition(param1=1,param2=2)
-# 1 and 2 are referred to as the arguments of the call.
+# 1 and 2 are referred to as the arguments of the function call.
 subtraction = function(banana, apple){
   result = banana-apple
   return(result)
@@ -36,7 +36,7 @@ subtraction = function(banana, apple){
 # By default, unless specified otherwise, banana=2, apple=3 because banana comes before apple in the order of parameters in the function.
 subtraction(banana=2, apple=3)
 subtraction(2,3)
-# If we are declaring the parameter with argument, order doesn't matter.
+# If we specify parameters with corresponding arguments, order doesn't matter.
 subtraction(apple=2,banana=3)
 print
 library(gapminder)

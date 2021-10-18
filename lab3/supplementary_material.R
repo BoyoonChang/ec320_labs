@@ -26,7 +26,10 @@ addition = function(param1, param2){
   result = param1+param2
   return(result)
 }
-# param1, param2 are referred to as parameters of the addition function.
+# param1, param2 are referred to as input parameters of the addition function.
+#'
+#' Side note: parameters of regression equation is $\beta_1$, $\beta_2$ in $Y
+#' _i=\beta_1 + \beta_2 X_i + u_i$ (more on this on page 85 of the textbook)
 addition(param1=1,param2=2)
 # 1 and 2 are referred to as the arguments of the function call.
 subtraction = function(banana, apple){

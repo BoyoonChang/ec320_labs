@@ -1,7 +1,7 @@
 ---
 title: Comprehensive Overview of R
 author: Boyoon Chang
-date: "17 October 2021"
+date: "18 October 2021"
 output: 
     html_document:
         keep_md: true
@@ -27,7 +27,15 @@ addition = function(param1, param2){
   result = param1+param2
   return(result)
 }
-# param1, param2 are referred to as parameters of the addition function.
+# param1, param2 are referred to as input parameters of the addition function.
+```
+
+
+Side note: parameters of regression equation is $\beta_1$, $\beta_2$ in $Y
+_i=\beta_1 + \beta_2 X_i + u_i$ (more on this on page 85 of the textbook)
+
+
+```r
 addition(param1=1,param2=2)
 ```
 
@@ -36,7 +44,7 @@ addition(param1=1,param2=2)
 ```
 
 ```r
-# 1 and 2 are referred to as the arguments of the call.
+# 1 and 2 are referred to as the arguments of the function call.
 subtraction = function(banana, apple){
   result = banana-apple
   return(result)
@@ -58,7 +66,7 @@ subtraction(2,3)
 ```
 
 ```r
-# If we are declaring the parameter with argument, order doesn't matter.
+# If we specify parameters with corresponding arguments, order doesn't matter.
 subtraction(apple=2,banana=3)
 ```
 
@@ -73,7 +81,7 @@ print
 ```
 ## function (x, ...) 
 ## UseMethod("print")
-## <bytecode: 0x7fe35d834b00>
+## <bytecode: 0x7f80fef189c8>
 ## <environment: namespace:base>
 ```
 
@@ -103,7 +111,7 @@ geom_vline
 ##         geom = GeomVline, position = PositionIdentity, show.legend = show.legend, 
 ##         inherit.aes = FALSE, params = list(na.rm = na.rm, ...))
 ## }
-## <bytecode: 0x7fe35ff9d380>
+## <bytecode: 0x7f80f8089318>
 ## <environment: namespace:ggplot2>
 ```
 
@@ -118,7 +126,7 @@ aes
 ##     aes <- new_aes(exprs, env = parent.frame())
 ##     rename_aes(aes)
 ## }
-## <bytecode: 0x7fe35fff0938>
+## <bytecode: 0x7f80f80dca20>
 ## <environment: namespace:ggplot2>
 ```
 
@@ -126,7 +134,7 @@ aes
 ggplot(gapminder, aes(x=gdpPercap, y=lifeExp)) + geom_point()
 ```
 
-![](supplementary_material_files/figure-html/unnamed-chunk-1-1.png)<!-- -->
+![](supplementary_material_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
 
 ```r
 # Following code won't run.
@@ -134,7 +142,7 @@ ggplot(gapminder, aes(x=gdpPercap, y=lifeExp)) + geom_point()
 ggplot(mapping=aes(x=gdpPercap, y=lifeExp), data = gapminder) + geom_point()
 ```
 
-![](supplementary_material_files/figure-html/unnamed-chunk-1-2.png)<!-- -->
+![](supplementary_material_files/figure-html/unnamed-chunk-2-2.png)<!-- -->
 
 ***
 ## 2. Review of ggplot
@@ -146,14 +154,14 @@ library(ggplot2)
 ggplot(data = gapminder, mapping=aes(x=gdpPercap, y=lifeExp))
 ```
 
-![](supplementary_material_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
+![](supplementary_material_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
 
 ```r
 ggplot(data = gapminder, mapping=aes(x=gdpPercap, y=lifeExp)) +
   geom_point()
 ```
 
-![](supplementary_material_files/figure-html/unnamed-chunk-2-2.png)<!-- -->
+![](supplementary_material_files/figure-html/unnamed-chunk-3-2.png)<!-- -->
 
 ```r
 ggplot(data = gapminder, mapping=aes(x=gdpPercap, y=lifeExp)) +
@@ -165,7 +173,7 @@ ggplot(data = gapminder, mapping=aes(x=gdpPercap, y=lifeExp)) +
 ## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
 ```
 
-![](supplementary_material_files/figure-html/unnamed-chunk-2-3.png)<!-- -->
+![](supplementary_material_files/figure-html/unnamed-chunk-3-3.png)<!-- -->
 
 ```r
 ggplot(data = gapminder, mapping=aes(x=gdpPercap, y=lifeExp)) +
@@ -177,7 +185,7 @@ ggplot(data = gapminder, mapping=aes(x=gdpPercap, y=lifeExp)) +
 ## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
 ```
 
-![](supplementary_material_files/figure-html/unnamed-chunk-2-4.png)<!-- -->
+![](supplementary_material_files/figure-html/unnamed-chunk-3-4.png)<!-- -->
 
 ```r
 ggplot(data = gapminder, mapping=aes(x=gdpPercap, y=lifeExp)) +
@@ -189,7 +197,7 @@ ggplot(data = gapminder, mapping=aes(x=gdpPercap, y=lifeExp)) +
 ## `geom_smooth()` using formula 'y ~ x'
 ```
 
-![](supplementary_material_files/figure-html/unnamed-chunk-2-5.png)<!-- -->
+![](supplementary_material_files/figure-html/unnamed-chunk-3-5.png)<!-- -->
 
 ```r
 ggplot(data = gapminder, mapping=aes(x=gdpPercap)) +
@@ -200,21 +208,21 @@ ggplot(data = gapminder, mapping=aes(x=gdpPercap)) +
 ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-![](supplementary_material_files/figure-html/unnamed-chunk-2-6.png)<!-- -->
+![](supplementary_material_files/figure-html/unnamed-chunk-3-6.png)<!-- -->
 
 ```r
 ggplot(data = gapminder, mapping=aes(x=gdpPercap)) +
   geom_density()
 ```
 
-![](supplementary_material_files/figure-html/unnamed-chunk-2-7.png)<!-- -->
+![](supplementary_material_files/figure-html/unnamed-chunk-3-7.png)<!-- -->
 
 ```r
 ggplot(data = gapminder, mapping=aes(x=gdpPercap, color=continent, fill=continent)) +
   geom_density(alpha=0.3)
 ```
 
-![](supplementary_material_files/figure-html/unnamed-chunk-2-8.png)<!-- -->
+![](supplementary_material_files/figure-html/unnamed-chunk-3-8.png)<!-- -->
 
 ```r
 ggplot(data = gapminder, mapping=aes(y=lifeExp, 
@@ -223,7 +231,7 @@ ggplot(data = gapminder, mapping=aes(y=lifeExp,
   geom_point()
 ```
 
-![](supplementary_material_files/figure-html/unnamed-chunk-2-9.png)<!-- -->
+![](supplementary_material_files/figure-html/unnamed-chunk-3-9.png)<!-- -->
 
 ```r
 ggplot(data = gapminder, mapping=aes(y=lifeExp, 
@@ -233,7 +241,7 @@ ggplot(data = gapminder, mapping=aes(y=lifeExp,
   geom_point()
 ```
 
-![](supplementary_material_files/figure-html/unnamed-chunk-2-10.png)<!-- -->
+![](supplementary_material_files/figure-html/unnamed-chunk-3-10.png)<!-- -->
 
 ```r
 ggplot(data = gapminder, mapping=aes(y=lifeExp, 
@@ -248,7 +256,7 @@ ggplot(data = gapminder, mapping=aes(y=lifeExp,
 ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
 ```
 
-![](supplementary_material_files/figure-html/unnamed-chunk-2-11.png)<!-- -->
+![](supplementary_material_files/figure-html/unnamed-chunk-3-11.png)<!-- -->
 
 ***
 ## 3. Import data externally
@@ -380,11 +388,11 @@ c(sample(c(0,1), 10, prob=c(0.5,0.5), replace=TRUE)) %>%
 ```
 
 ```
-##  [1] 1 1 0 1 1 0 0 1 1 1
+##  [1] 0 1 0 1 1 0 1 1 0 0
 ```
 
 ```
-## [1] 0.7
+## [1] 0.5
 ```
 
 ```r
@@ -426,5 +434,5 @@ ggplot()+
   annotate("text", x= -6.8, y=-0.01,label="x=-6.8", color="blue")
 ```
 
-![](supplementary_material_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+![](supplementary_material_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 

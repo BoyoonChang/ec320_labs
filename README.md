@@ -24,5 +24,5 @@
   - Review R basics
   - Go over Current Population Survey
 
-- Lab material: [Rmarkdown](lab3/Lab3.Rmd), [Markdown](lab3/Lab2.md)
-- Supplementary material: [R](lab3/supplementary_material.R) [Markdown](lab3/supplementary_material.md)
+- Lab material: [Rmarkdown](lab3/Lab3.Rmd), [Markdown](lab3/Lab3.md)
+- Supplementary material: [R](lab3/supplementary_material.R), [Markdown](lab3/supplementary_material.md)

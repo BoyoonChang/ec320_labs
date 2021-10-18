@@ -9,6 +9,29 @@ output: html_document
 knitr::opts_chunk$set(echo = T, warning = F, message = F, cache = F)
 ```
 
+## Review of ggplot
+
+```{r}
+library(ggplot2)
+library(gapminder)
+names(gapminder)
+?ggplot
+ggplot(data = gapminder, mapping=aes(x=gdpPercap, y=lifeExp))
+ggplot(data = gapminder, mapping=aes(x=gdpPercap, y=lifeExp)) +
+  geom_point()
+ggplot(data = gapminder, mapping=aes(x=gdpPercap, y=lifeExp)) +
+  geom_point()+
+  geom_smooth()
+ggplot(data = gapminder, mapping=aes(x=gdpPercap, y=lifeExp)) +
+  geom_point()+
+  geom_smooth(se=FALSE)
+ggplot(data = gapminder, mapping=aes(x=gdpPercap, y=lifeExp)) +
+  geom_point()+
+  geom_smooth(method="lm")
+ggplot(data = gapminder, mapping=aes(x=gdpPercap)) +
+  geom_histogram()
+```
+
 ## Current Population Survey
 
 Today you will investigate racial disparities in the labor market using data from the [Current Population Survey](https://www.census.gov/programs-surveys/cps.html) (CPS), a large survey administered by the [US Census Bureau](https://www.census.gov/en.html) and the [Bureau of Labor Statistics](https://www.bls.gov). The federal government uses the CPS to estimate the unemployment rate. Economists use the CPS to study a variety of topics in labor economics, including the effect of binding minimum wages, the gender pay gap, and returns to schooling. You will use a CPS sample of workers from Boston and Chicago to study employment patterns by race.
@@ -134,6 +157,8 @@ n_w <- filter(cps, black == 0 & !is.na(employed)) %>%
 # t-stat
 t_stat <- (mean_b - mean_w) / sqrt(var_b/n_b + var_w/n_w)
 t_stat
+n_b+n_w
+n_w
 ```
 
 To conclude your test, compare your $t$-stat to 2 (an approximation for the critical value of $t$ in 5 percent test--we will do more rigorous hypothesis testing later in the course). If $|t| > 2$, then you can reject the null hypothesis. Your $t$-stat of -6.84 is certainly more extreme than 2, so you can reject the null hypothesis. This means that the difference in employment rates is statistically significant. There is a racial disparity in employment.

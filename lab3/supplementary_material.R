@@ -2,6 +2,9 @@
 #' title: Comprehensive Overview of R
 #' author: Boyoon Chang
 #' date: "`r format(Sys.Date(), '%d %B %Y')`"
+#' output: 
+#'     html_document:
+#'         keep_md: true
 #' ---
 
 #' ***

@@ -100,7 +100,7 @@ library(tidyverse)
 #' - R will look for the file called 'lab3.csv'
 #' - But where is the lab3.csv? 
 #' - We need to specify the location of this file, such that R knows where to look for the file.
-# Below code won't run because R doesn't know which folder to look at for lab2.csv.
+# Below code won't run because R doesn't know which folder to look at for lab3.csv.
 # cps <- read_csv("lab3.csv") 
 # You could code out like below, where you specify where the file is in
 cps <- read_csv('/Users/boyoonc/ec320_labs/lab3/lab3.csv')
@@ -110,9 +110,9 @@ cps <- read_csv('/Users/boyoonc/ec320_labs/lab3/lab3.csv')
 #' 
 #' Step 1: This code allows us to see which directory that R is operating in.
 getwd() 
-#' Step 2: We set the working directory to be the one inside the quotes.
+#' Step 2: We set the working directory to be the one inside the quotes, which would indicate the location of the file 'lab3.csv'.
 setwd('/Users/boyoonc/ec320_labs/lab3') 
-#' Step 3: Now R will look for file that is inside the working directory even if we don't specify the location of the file like the code above because by default R looks for 'lab3.csv' file first from the **working directory**.
+#' Step 3: Now R will look for file that is inside the working directory even if we don't specify the location of the file like the code above because by default R looks for 'lab3.csv' file first from the **working directory**. Now `cps=read_csv('lab3.csv')` runs by itself.
 cps = read_csv('lab3.csv') 
 
 #' ***

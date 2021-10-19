@@ -81,7 +81,7 @@ print
 ```
 ## function (x, ...) 
 ## UseMethod("print")
-## <bytecode: 0x7f80b53df7b0>
+## <bytecode: 0x7ffbb99155b0>
 ## <environment: namespace:base>
 ```
 
@@ -111,7 +111,7 @@ geom_vline
 ##         geom = GeomVline, position = PositionIdentity, show.legend = show.legend, 
 ##         inherit.aes = FALSE, params = list(na.rm = na.rm, ...))
 ## }
-## <bytecode: 0x7f80a63688d0>
+## <bytecode: 0x7ffbafa7ded0>
 ## <environment: namespace:ggplot2>
 ```
 
@@ -126,7 +126,7 @@ aes
 ##     aes <- new_aes(exprs, env = parent.frame())
 ##     rename_aes(aes)
 ## }
-## <bytecode: 0x7f80a63bfee8>
+## <bytecode: 0x7ffbafad54e8>
 ## <environment: namespace:ggplot2>
 ```
 
@@ -293,7 +293,7 @@ library(tidyverse)
 
 
 ```r
-# Below code won't run because R doesn't know which folder to look at for lab2.csv.
+# Below code won't run because R doesn't know which folder to look at for lab3.csv.
 # cps <- read_csv("lab3.csv") 
 # You could code out like below, where you specify where the file is in
 cps <- read_csv('/Users/boyoonc/ec320_labs/lab3/lab3.csv')
@@ -325,14 +325,14 @@ getwd()
 ## [1] "/Users/boyoonc/ec320_labs/lab3"
 ```
 
-Step 2: We set the working directory to be the one inside the quotes.
+Step 2: We set the working directory to be the one inside the quotes, which would indicate the location of the file 'lab3.csv'.
 
 
 ```r
 setwd('/Users/boyoonc/ec320_labs/lab3') 
 ```
 
-Step 3: Now R will look for file that is inside the working directory even if we don't specify the location of the file like the code above because by default R looks for 'lab3.csv' file first from the **working directory**.
+Step 3: Now R will look for file that is inside the working directory even if we don't specify the location of the file like the code above because by default R looks for 'lab3.csv' file first from the **working directory**. Now `cps=read_csv('lab3.csv')` runs by itself.
 
 
 ```r
@@ -428,11 +428,11 @@ c(sample(c(0,1), 10, prob=c(0.5,0.5), replace=TRUE)) %>%
 ```
 
 ```
-##  [1] 1 1 1 0 1 1 0 1 1 1
+##  [1] 0 1 0 0 0 0 0 1 0 0
 ```
 
 ```
-## [1] 0.8
+## [1] 0.2
 ```
 
 ```r

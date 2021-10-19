@@ -90,20 +90,30 @@ ggplot(data = gapminder, mapping=aes(y=lifeExp,
   geom_smooth()
 
 #' ***
-#' ## 3. Import data externally
+#' ## 3. Import external data
 #' 
 #' ### Load tidyverse
 library(tidyverse)
 
 #' ### read_csv() function in tidyverse package
 #' 
-#' - R will look for the file called 'lab2.csv'
-#' - But where is the lab2.csv? 
+#' - R will look for the file called 'lab3.csv'
+#' - But where is the lab3.csv? 
 #' - We need to specify the location of this file, such that R knows where to look for the file.
 # Below code won't run because R doesn't know which folder to look at for lab2.csv.
-# our_data <- read_csv("lab2.csv") 
-# could do this if you set working directory to the folder that lab2.csv is in OR
+# cps <- read_csv("lab3.csv") 
+# You could code out like below, where you specify where the file is in
 cps <- read_csv('/Users/boyoonc/ec320_labs/lab3/lab3.csv')
+
+#' **OR**
+#' **In order to make `cps <- read_csv("lab3.csv")` code run by itself, we need to follow below steps:** 
+#' 
+#' Step 1: This code allows us to see which directory that R is operating in.
+getwd() 
+#' Step 2: We set the working directory to be the one inside the quotes.
+setwd('/Users/boyoonc/ec320_labs/lab3') 
+#' Step 3: Now R will look for file that is inside the working directory even if we don't specify the location of the file like the code above because by default R looks for 'lab3.csv' file first from the **working directory**.
+cps = read_csv('lab3.csv') 
 
 #' ***
 #' ## 4. Data analysis

@@ -1,7 +1,7 @@
 ---
 title: Comprehensive Overview of R
 author: Boyoon Chang
-date: "18 October 2021"
+date: "19 October 2021"
 output: 
     html_document:
         keep_md: true
@@ -81,7 +81,7 @@ print
 ```
 ## function (x, ...) 
 ## UseMethod("print")
-## <bytecode: 0x7f80fef189c8>
+## <bytecode: 0x7f80b53df7b0>
 ## <environment: namespace:base>
 ```
 
@@ -111,7 +111,7 @@ geom_vline
 ##         geom = GeomVline, position = PositionIdentity, show.legend = show.legend, 
 ##         inherit.aes = FALSE, params = list(na.rm = na.rm, ...))
 ## }
-## <bytecode: 0x7f80f8089318>
+## <bytecode: 0x7f80a63688d0>
 ## <environment: namespace:ggplot2>
 ```
 
@@ -126,7 +126,7 @@ aes
 ##     aes <- new_aes(exprs, env = parent.frame())
 ##     rename_aes(aes)
 ## }
-## <bytecode: 0x7f80f80dca20>
+## <bytecode: 0x7f80a63bfee8>
 ## <environment: namespace:ggplot2>
 ```
 
@@ -259,7 +259,7 @@ ggplot(data = gapminder, mapping=aes(y=lifeExp,
 ![](supplementary_material_files/figure-html/unnamed-chunk-3-11.png)<!-- -->
 
 ***
-## 3. Import data externally
+## 3. Import external data
 
 ### Load tidyverse
 
@@ -287,16 +287,56 @@ library(tidyverse)
 
 ### read_csv() function in tidyverse package
 
-- R will look for the file called 'lab2.csv'
-- But where is the lab2.csv? 
+- R will look for the file called 'lab3.csv'
+- But where is the lab3.csv? 
 - We need to specify the location of this file, such that R knows where to look for the file.
 
 
 ```r
 # Below code won't run because R doesn't know which folder to look at for lab2.csv.
-# our_data <- read_csv("lab2.csv") 
-# could do this if you set working directory to the folder that lab2.csv is in OR
+# cps <- read_csv("lab3.csv") 
+# You could code out like below, where you specify where the file is in
 cps <- read_csv('/Users/boyoonc/ec320_labs/lab3/lab3.csv')
+```
+
+```
+## 
+## ── Column specification ────────────────────────────────────────────────────────
+## cols(
+##   employed = col_double(),
+##   black = col_double(),
+##   female = col_double(),
+##   educ = col_character(),
+##   exper = col_double()
+## )
+```
+
+**OR**
+**In order to make `cps <- read_csv("lab3.csv")` code run by itself, we need to follow below steps:** 
+
+Step 1: This code allows us to see which directory that R is operating in.
+
+
+```r
+getwd() 
+```
+
+```
+## [1] "/Users/boyoonc/ec320_labs/lab3"
+```
+
+Step 2: We set the working directory to be the one inside the quotes.
+
+
+```r
+setwd('/Users/boyoonc/ec320_labs/lab3') 
+```
+
+Step 3: Now R will look for file that is inside the working directory even if we don't specify the location of the file like the code above because by default R looks for 'lab3.csv' file first from the **working directory**.
+
+
+```r
+cps = read_csv('lab3.csv') 
 ```
 
 ```
@@ -388,11 +428,11 @@ c(sample(c(0,1), 10, prob=c(0.5,0.5), replace=TRUE)) %>%
 ```
 
 ```
-##  [1] 0 1 0 1 1 0 1 1 0 0
+##  [1] 1 1 1 0 1 1 0 1 1 1
 ```
 
 ```
-## [1] 0.5
+## [1] 0.8
 ```
 
 ```r
@@ -434,5 +474,5 @@ ggplot()+
   annotate("text", x= -6.8, y=-0.01,label="x=-6.8", color="blue")
 ```
 
-![](supplementary_material_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](supplementary_material_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 

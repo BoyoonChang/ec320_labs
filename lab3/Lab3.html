@@ -521,10 +521,6 @@ n_w &lt;- filter(cps, black == 0 &amp; !is.na(employed)) %&gt;%
 t_stat &lt;- (mean_b - mean_w) / sqrt(var_b/n_b + var_w/n_w)
 t_stat</code></pre>
 <pre><code>## [1] -6.844988</code></pre>
-<pre class="r"><code>n_b+n_w</code></pre>
-<pre><code>## [1] 8873</code></pre>
-<pre class="r"><code>n_w</code></pre>
-<pre><code>## [1] 7537</code></pre>
 <p>To conclude your test, compare your <span class="math inline">\(t\)</span>-stat to 2 (an approximation for the critical value of <span class="math inline">\(t\)</span> in 5 percent test–we will do more rigorous hypothesis testing later in the course). If <span class="math inline">\(|t| &gt; 2\)</span>, then you can reject the null hypothesis. Your <span class="math inline">\(t\)</span>-stat of -6.84 is certainly more extreme than 2, so you can reject the null hypothesis. This means that the difference in employment rates is statistically significant. There is a racial disparity in employment.</p>
 </div>
 <div id="discrimination" class="section level3">

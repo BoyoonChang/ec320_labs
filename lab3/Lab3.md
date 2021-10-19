@@ -252,22 +252,6 @@ t_stat
 ## [1] -6.844988
 ```
 
-```r
-n_b+n_w
-```
-
-```
-## [1] 8873
-```
-
-```r
-n_w
-```
-
-```
-## [1] 7537
-```
-
 To conclude your test, compare your $t$-stat to 2 (an approximation for the critical value of $t$ in 5 percent test--we will do more rigorous hypothesis testing later in the course). If $|t| > 2$, then you can reject the null hypothesis. Your $t$-stat of -6.84 is certainly more extreme than 2, so you can reject the null hypothesis. This means that the difference in employment rates is statistically significant. There is a racial disparity in employment.
 
 ### Discrimination?

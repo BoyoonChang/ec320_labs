@@ -1,0 +1,129 @@
+---
+title: "Lab 4 -- Simple OLS"
+author: "Jenni Putz"
+date: "10/20/2021"
+output: 
+  html_document:
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warnings  = FALSE)
+```
+
+## Setup
+```{r}
+library(pacman)
+p_load(tidyverse, broom, stargazer, AER)
+# Note: broom package contains the tidy() function
+# AER is just loaded to get the CASchools data
+```
+
+## Data
+For this lab, we will use data from the `AER` package on California schools. To get this data and use it we can: 
+```{r}
+data("CASchools")
+# note, remind them  that they need to use read_csv() for the problem set
+
+# look at a  snapshot
+head(CASchools, 10)
+names(CASchools)
+```
+
+## Simple OLS Regression
+### Running a regression
+To do a regression in R, we use `lm()`. The basic steup: name <- lm(y ~ x, data = name_of_df). 
+
+Let's regress reading scores on student expenditure.
+```{r}
+lm(read ~ expenditure, data = CASchools)
+```
+
+The output from `lm()` gives us an intercept coefficient, $\hat{\beta}_0$, and a slope coefficient, $\hat{\beta}_1$. 
+
+Let's run another regression. Regress math schores on student expenditure.
+```{r}
+lm(read ~ expenditure, data = CASchools)
+```
+
+On your own, try to code a regression for $Math_i = \beta_0 + \beta_1 Income_i  + u_i$.
+
+```{r}
+lm(math ~ income,  data = CASchools)
+```
+
+### Making tables
+Now that we know how to run a regression, let's talk about how to look at  the output. The output above wasn't super informative...
+
+#### Using `summary()`
+The first option is to use the summary function in R. There are two ways to do this:
+
+1: Nest the `lm()` inside `summary()`
+```{r}
+summary(lm(math ~ income, data = CASchools))
+```
+
+2: Save your regression as an object in R so that we can then use that object later! (This is preferred).
+```{r}
+reg1 <- lm(math ~ income, data = CASchools)
+summary(reg1)
+```
+Notice that both ways produce the same output. We have the intercept coefficient, $\hat{\beta}_0 = 625$, and the  slope coefficient $\hat{\beta}_1 = 1.8$. `summary()` also gives us other information that we didn't  have before like the standard error, the t-score, the p-value, and  the $R^2$. The stars on the p-value tell us if the coefficient is statistically significant (more on this after the midterm).
+
+#### Using `tidy()`
+Another way to make nice regression output is to use the `tidy()` function from the `broom` package. To use this, you must have loaded the `broom` package in  `p_load()`. The process is similar:
+```{r}
+# since we have already created reg1 as an object, we can just call it without having to redo the regression
+tidy(reg1)
+```
+`tidy()` puts the information from `summary()` into a much nicer looking table. 
+
+#### Stargazer
+By far, the most powerful tool for making amazing tables in R is the `stargazer` package. I  would encourage you to try this out if you are feeling up for it! 
+
+First, let's try to make a simple table with `stargazer()` using our `reg1` object.
+```{r, warning = F}
+stargazer(reg1)
+```
+Huh, weird output right? Stargazer is defaulting to TeX output. We can change the type of output we want.
+
+1: As text (use this for your problem set)
+```{r, warning = F}
+stargazer(reg1, type = "text")
+```
+Stargazer can also do html output and MS word output (although word output  is not recommended).
+
+Stargazer gave us some stats that we  don't really care about... let's get rid of them...
+```{r, warning = F}
+stargazer(reg1, keep.stat =c("rsq", "n"), type = "text")
+```
+
+Looks great!
+
+Unlike the tables we made using `summary()` and `broom()`, stargazer can combine multiple regressions into one table!
+```{r, warning = F}
+# do another regression and save it as an object
+reg2 <- lm(read ~ income, data = CASchools)
+stargazer(reg1, reg2, keep.stat =c("rsq", "n"), type = "text")
+```
+
+The variables in the regressions don't even have to be the same!
+```{r, warning = F}
+# do another regression and save it as an object
+reg3 <- lm(read ~ expenditure, data = CASchools)
+stargazer(reg1, reg2, reg3, keep.stat =c("rsq", "n"), type = "text")
+```
+We can get really fancy with `stargazer()`. For more info, see the cheatsheet on Canvas.
+
+### Visualizing your regression
+Lastly, we can use ggplot and fit a regression line through our data. Let's start by making a scatterplot with math scores on the y axis and income on the x axis.
+
+```{r}
+ggplot(data = CASchools, aes(x = income, y = math)) + geom_point()
+```
+
+To add a regression line, we use the `stat_smooth()` function:
+```{r}
+# method = "lm" tells R that we are using OLS. se = FALSE removes the standard error bars.
+ggplot(data = CASchools, aes(x = income, y = math)) + geom_point() + stat_smooth(method ="lm", se =FALSE)
+```

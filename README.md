@@ -26,3 +26,10 @@
 
 - Lab material: [Rmarkdown](lab3/Lab3.Rmd), [Markdown](lab3/Lab3.md)
 - Supplementary material: [R](lab3/supplementary_material.R), [Markdown](lab3/supplementary_material.md)
+
+## Lab4
+- Goals: 
+  - Run a linear model regression
+  - Learn how to interpret the regression results
+
+- Lab material: [Rmarkdown](lab4/lab4_f21.Rmd), [Markdown](lab4/lab4_f21.md)

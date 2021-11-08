@@ -1,0 +1,151 @@
+---
+title: "Lab 5"
+author: "Jenni Putz"
+date: "11/7/2021"
+output: 
+  html_document:
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Setup
+```{r}
+library(pacman)
+p_load(tidyverse, nycflights13)
+```
+
+Look at your data by viewing it or using the `head()` function. The dataframe is called `flights`. his data frame contains all 336,776 flights that departed from New York City in 2013. The data comes from the US Bureau of Transportation Statistics.
+```{r}
+head(flights)
+```
+
+
+# Review of Dplyr Functions
+You have already learned how to use the tidyverse functions, but it may be useful to have some review. Recall, using functions from dplyr, we can manipulate our data frame. We can:
+
+- Pick observations by their values using `filter()`.
+- Reorder the rows with `arrange()`.
+- Pick variables by their names using `select()`.
+- Create new variables with functions of existing variables with `mutate()`.
+- Collapse many values down to a single summary using `group_by()` and `summarise()`.
+
+Recall, the steps to use these functions are the same:
+
+1. Start with the name of the data frame you want to save in your global environment.
+2. After the = or <-, put the name of the data frame you want to manipulate. In this case, `flights`.
+3. Then, we can use the %>% pipe operator to describe what we want to do with the data frame, using the variable names.
+4. The result is a new dataframe.
+
+
+Today, we will review how to use filter, mutate, and group_by/summarize. 
+
+## Filter
+`filter()` allows you to subset observations based on their values. For example, we can select all flights in January with:
+```{r}
+jan_flights <- flights %>% filter(month == 1)
+
+jan_flights
+```
+
+### Logical Operators
+Boolean operators that work with dply: & is “and”, | is “or”, and ! is “not”.
+
+
+The following code finds all flights that departed in November or December:
+```{r}
+nov_dec <- flights %>% filter(month == 11 | month == 12)
+nov_dec
+```
+
+You can also use the `%in%` operator to achieve the same thing:
+```{r}
+nov_dec <- flights %>% filter(month %in% c(11,12))
+nov_dec
+```
+
+Find flights that weren’t delayed (on arrival or departure) by more than two hours:
+```{r}
+nondelays <- flights %>% filter(arr_delay <= 120 & dep_delay <= 120)
+nondelays
+```
+
+
+## Mutate
+`mutate()` allows you to create new variables. Make sure to save the resulting data frame so that it is in your global environment.
+
+Here, we create two variables, `gain` and `speed`.
+```{r}
+new_df <- flights %>% mutate(
+  gain = dep_delay - arr_delay,
+  speed = distance / air_time * 60
+)
+
+new_df
+```
+
+
+## Group_by and Summarize
+`summarize()` collapses a data frame into a single row. It is most used in conjunction with `group_by()`.
+
+Imagine that we want to explore the relationship between the distance and average delay for each location. Using what you know about dplyr, you might write code like this:
+```{r}
+delays <- flights %>% 
+  group_by(dest) %>% 
+  summarise(
+    count = n(),
+    dist = mean(distance, na.rm = TRUE),
+    delay = mean(arr_delay, na.rm = TRUE)
+  ) 
+
+delays
+```
+
+
+
+# Merging Datasets
+Sometimes, the data we want to use is contained in two separate data frames. We want a way to merge those data frames together.
+
+The different merges we can do:
+- `inner_join(x, y)` only includes observations that having matching x and y key
+values. Rows of x can be dropped/filtered.
+- `left_join(x, y)` includes all observations in x, regardless of whether they match
+or not. This is the most commonly used join because it ensures that you don’t lose
+observations from your primary table.
+- `right_join(x, y)` includes all observations in y. It’s equivalent to left_join(y,
+x), but the columns will be ordered differently.
+- `full_join(x, y)` includes all observations from x and y
+- `merge(x, y)` or `inner_join(x, y)`  uses all variables with common names across the two tables
+
+
+The  `nycflights13` package also contains a data frame called `weather`. Let's look at it:
+```{r}
+head(weather)
+```
+
+Notice that there are common variable names between the `flights` and `weather` data frame. We can join them together.
+```{r}
+flights2 <- left_join(x=flights, y=weather) 
+flights2
+```
+
+Notice the message Joining by: c("year", "month", "day", "hour", "origin"), which indicates the variables used for joining. If you want to set specific variables to join with, you can use `by = c()` in the argument of the join, like so:
+```{r}
+flights2 <- left_join(x=flights, y=weather, by = c("year", "month", "day", "hour", "origin")) 
+flights2
+```
+
+Note that these two joins are equivalent.
+
+# Resources
+See chapter 13 of R for Data Science (linked on canvas) for a more in-depth tutorial on joining datasets.
+
+
+
+
+
+
+
+

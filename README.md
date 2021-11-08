@@ -33,3 +33,10 @@
   - Learn how to interpret the regression results
 
 - Lab material: [Rmarkdown](lab4/lab4_f21.Rmd), [Markdown](lab4/lab4_f21.md)
+
+## Lab5
+- Goals: 
+  - Review dplyr functions
+  - Merging two datasets
+
+- Lab material: [Rmarkdown](lab5/lab5_f21.Rmd), [Markdown](lab5/lab5_f21.md)

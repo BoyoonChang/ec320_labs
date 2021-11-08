@@ -103,7 +103,7 @@ library(tidyverse)
 # Below code won't run because R doesn't know which folder to look at for lab3.csv.
 # cps <- read_csv("lab3.csv") 
 # You could code out like below, where you specify where the file is in
-cps <- read_csv('/Users/boyoonc/ec320_labs/lab3/lab3.csv')
+cps <- read_csv("/Users/boyoonc/ec320_labs/lab3/lab3.csv")
 
 #' **OR**
 #' **In order to make `cps <- read_csv("lab3.csv")` code run by itself, we need to follow below steps:** 

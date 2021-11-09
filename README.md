@@ -41,3 +41,4 @@
 
 - Lab material: [Rmarkdown](lab5/lab5_f21.Rmd), [Markdown](lab5/lab5_f21.md)
 - Lab live: [Markdown](lab5/lab5.md)
+- Join flights and weather data: [Markdown](lab5/join_weather_flights.md)

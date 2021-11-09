@@ -64,20 +64,27 @@ left_join(x=flights, y=weather)
 left_join(x=flights, y=weather, by = c("year", "month", "day", "hour", "origin")) 
 names(weather)
 names(flights)
-testd1=tibble(
-  var1=1:4,
-  var2=2:5,
-  var3=3:6,
-  varA=4:7
+?join
+d1=tibble(
+  var1=1:3,
+  varA=4:6
 )
-testd1
-testd2= tibble(
-  varA=5:10,
-  varB=11:16
+d1
+d2= tibble(
+  varA=5:7,
+  varB=c("A", "B", "C")
 )
-testd2
-testd1 %>% full_join(testd2)
-testd1 %>% left_join(testd2)
-testd1 %>% right_join(testd2)
-testd1 %>% inner_join(testd2)
+d2
+
+full_join(d1, d2)
+
+d1 %>% left_join(d2)
+left_join(d1, d2)
+
+d1 %>% right_join(d2)
+right_join(d1, d2)
+
+d1 %>% inner_join(d2)
+inner_join(d1, d2)
+
 

@@ -40,3 +40,4 @@
   - Merging two datasets
 
 - Lab material: [Rmarkdown](lab5/lab5_f21.Rmd), [Markdown](lab5/lab5_f21.md)
+- Lab live: [Markdown](lab5/lab5.md)

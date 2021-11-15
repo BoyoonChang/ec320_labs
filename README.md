@@ -42,3 +42,11 @@
 - Lab material: [Rmarkdown](lab5/lab5_f21.Rmd), [Markdown](lab5/lab5_f21.md)
 - Lab live: [Markdown](lab5/lab5.md)
 - Join flights and weather data: [Markdown](lab5/join_weather_flights.md)
+
+## Lab6
+- Goals: 
+  - Review multiple regressions
+  - Review omitted variable bias
+  - Intro to F-test
+  
+- Lab material: [Rmarkdown](lab6/lab6_f21.Rmd), [Markdown](lab6/lab6_f21.md)

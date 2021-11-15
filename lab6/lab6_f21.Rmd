@@ -1,0 +1,134 @@
+---
+title: "Lab 6 - Multiple Regression"
+author: "Jenni Putz"
+date: "11/12/2021"
+output: 
+  html_document:
+    keep_md: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Setup
+```{r, message=F}
+library(pacman)
+p_load(tidyverse, stargazer, broom)
+
+wages <- read_csv("wages.csv")
+```
+
+Let's look at the data frame:
+```{r}
+head(wages,10)
+```
+
+## Multiple Regression in R
+We know how to do simple OLS--doing multiple OLS is just one easy step further! Let's run a regression of log wages on education and experience:
+```{r}
+reg1 <- lm(lwage ~ educ + exper, data = wages)
+summary(reg1)
+```
+R gives us the t-stat and p-value so we can easily conduct hypothesis tests. Suppose we want to test 
+$$H_0\text{: } \beta_1 = 0$$ vs $$H_1\text{: } \beta_1 \neq 0$$ at the 5% level.
+We can look at the p-value and see that $p < \alpha$ so we can reject the null hypothesis at 5%.
+
+Like last lab, we can use stargazer to summarize our regression results. This time, let's keep the adjusted $R^2$ in our table.
+```{r, warning = F}
+stargazer(reg1, keep.stat = c("rsq", "adj.rsq", "n"), type = "text")
+```
+
+### Confidence Intervals
+How do we get confidence intervals in R? Let's do a 95% confidence interval.
+
+Option 1: Construct by hand. We have the standard error and we have $\hat{\beta}_1$. We need to get the critical value of t.
+```{r}
+# We can use the qt() function to get the critical value of t. First put in your significance level. 
+# for a two-tail test, make sure to divide by 2
+# then the degrees of freedom. we have 1604-3 degrees of freedom
+qt(.05/2, 1601)
+```
+The critical value of t is 1.96. Now we can plug that in to our confidence interval formula:
+$$ .080330 - 1.96(.005259) \leq \beta_1 \leq .080330 + 1.96(.005259) $$
+Which simplifies to:
+$$ .0700 \leq \beta_1 \leq .0906$$
+
+Option 2: Let R tell us. The `tidy()` function will give us the confidence interval if we tell it!
+```{r}
+tidy(reg1, conf.int = T)
+```
+The confidence interval matches our by-hand solution! 
+
+But this is for a 95%. How do we get `tidy()` to give us a different confidence level? What if we want a 90% confidence interval?
+```{r}
+tidy(reg1, conf.int = T, conf.level = .9)
+```
+
+
+## Omitted Variable Bias
+```{r, warning=F}
+reg1 <- lm(lwage ~ educ, data = wages)
+reg2 <- lm(lwage ~ educ + exper, data = wages)
+stargazer(reg1, reg2, keep.stat = c("rsq", "adj.rsq", "n"), type = "text")
+```
+
+What is the sign of the OVB? Use the formula:
+$$ Bias = \beta_2 \frac{cov(X_1, X_2)}{var(X_1)} $$
+$\beta_2 = .046$, which is positive. We can get the covariance by using the covariance function.
+```{r}
+cov(wages$educ, wages$exper)
+```
+There is a negative bias from omitting experience.
+
+Let's do another regression.
+```{r, warning = F}
+reg3 <- lm(lwage ~ educ + exper + IQ, data = wages) # positive bias from omitting IQ (imperfect proxy for intelligence)
+stargazer(reg1, reg2, reg3, keep.stat = c("rsq", "adj.rsq", "n"), type = "text")
+```
+How are IQ and education correlated? Check the OVB formula again.
+Here, $\beta_3 = .004$ which is positive. We can check the covariance to get the sign of the bias:
+```{r}
+cov(wages$educ, wages$IQ)
+```
+IQ and education are positively correlated and there is a positive bias from omitting IQ.
+
+We can keep adding variables to our regression:
+```{r, warning = F}
+reg4 <- lm(lwage ~ educ + exper + IQ + KWW, data = wages) 
+reg5 <- lm(lwage ~ educ + exper + IQ + KWW + fatheduc, data = wages) 
+reg6 <- lm(lwage ~ educ + exper + IQ + KWW + fatheduc + motheduc, data = wages) 
+stargazer(reg1, reg2, reg3, reg4, reg5, reg6, keep.stat = c("rsq", "adj.rsq", "n"), type = "text")
+```
+
+Let's look a little closer at the models with father's education included. The coefficient is not statistically significant. Should we still include this variable in our regression?
+
+**YES**
+Remember, if we exclude variables that should be in the
+model and they are correlated with the regressors that we
+include, then we will have
+omitted variable bias
+-- Even if they aren’t correlated with the included variables, they
+help us tighten up our standard errors
+-- If theory or intuition says you should have a variable in the
+model, then it should be in there!
+
+
+## F-tests
+Let's suppose we want to test to see if the coefficients on father's education and mother's education are equal to zero at the 5% level.
+The null hypothesis is:
+$$H_0\text{: } \beta_5 = \beta_6 = 0$$
+The alternative hypothesis is:
+$$H_1\text{: either } \beta_5 \neq 0 \text{ or } \beta_6 \neq 0$$
+
+To do the test, we need to identify our *restricted* model and our *unrestricted* model. `reg4` is the restricted model and `reg6` is the unrestricted. 
+
+Recall, the F-stat is equal to:
+$$F = \frac{(R^2_u - R^2_r)/q}{(1-R^2_u)/(n-k-1)}$$
+
+The easy way and have R do it for us: Load the `car` package to use this function:
+```{r}
+p_load(car)
+linearHypothesis(reg6, c("fatheduc=0", "motheduc=0"))
+```
+

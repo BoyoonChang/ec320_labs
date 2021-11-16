@@ -25,6 +25,10 @@ head(wages,10)
 ```
 
 ## Multiple Regression in R
+What is simple regression?
+
+What is multiple regression?
+
 We know how to do simple OLS--doing multiple OLS is just one easy step further! Let's run a regression of log wages on education and experience:
 ```{r}
 reg1 <- lm(lwage ~ educ + exper, data = wages)
@@ -56,6 +60,7 @@ $$ .0700 \leq \beta_1 \leq .0906$$
 
 Option 2: Let R tell us. The `tidy()` function will give us the confidence interval if we tell it!
 ```{r}
+tidy(reg1)
 tidy(reg1, conf.int = T)
 ```
 The confidence interval matches our by-hand solution! 
@@ -78,13 +83,19 @@ $$ Bias = \beta_2 \frac{cov(X_1, X_2)}{var(X_1)} $$
 $\beta_2 = .046$, which is positive. We can get the covariance by using the covariance function.
 ```{r}
 cov(wages$educ, wages$exper)
+# calculating omitted variable bias
+reg2$coef[3]*cov(wages$educ, wages$exper)/var(wages$educ)
+# comparing (reg1 educ coef) with (reg2 educ coef+ omv bias)
+near(reg2$coef[2]+reg2$coef[3]*cov(wages$educ, wages$exper)/var(wages$educ), reg1$coef[2]) 
 ```
 There is a negative bias from omitting experience.
 
 Let's do another regression.
 ```{r, warning = F}
 reg3 <- lm(lwage ~ educ + exper + IQ, data = wages) # positive bias from omitting IQ (imperfect proxy for intelligence)
-stargazer(reg1, reg2, reg3, keep.stat = c("rsq", "adj.rsq", "n"), type = "text")
+reg4 <- lm(lwage ~ educ + exper + IQ + KWW, data = wages) 
+
+stargazer(reg1, reg2, reg3, reg4, keep.stat = c("rsq", "adj.rsq", "n"), type = "text")
 ```
 How are IQ and education correlated? Check the OVB formula again.
 Here, $\beta_3 = .004$ which is positive. We can check the covariance to get the sign of the bias:
@@ -128,7 +139,60 @@ $$F = \frac{(R^2_u - R^2_r)/q}{(1-R^2_u)/(n-k-1)}$$
 
 The easy way and have R do it for us: Load the `car` package to use this function:
 ```{r}
+## H0: beta5=beta6=0
+# unrestricted model's R-squared
+summary(reg6)$r.squared
+# restricted model's R-squared
+summary(reg4)$r.squared
+# degrees of freedom for denominator
+nrow(wages)-nrow(summary(reg6)$coef)
+# degrees of freedom for numerator (number of restriction)
+q = 2
+# F statistic
+((summary(reg6)$r.squared-summary(reg4)$r.squared)/q)/
+  ((1-summary(reg6)$r.squared)/(nrow(wages)-nrow(summary(reg6)$coef)))
+# F critical value
+qf(0.95, q, nrow(wages)-nrow(summary(reg6)$coef))
+
+### Using packaged function to perform F test
 p_load(car)
 linearHypothesis(reg6, c("fatheduc=0", "motheduc=0"))
 ```
 
+
+### Another example of F-test
+Suppose the null hypothesis is:
+$$H_0\text{: } \beta_1 = \beta_2  = \beta_3  = \beta_4  = \beta_5  = \beta_6 = 0.$$
+The null hypothesis is that every explanatory variable has no effect on log wage.
+
+We could calculate F-stat as the following: 
+
+```{r}
+## H0: beta1=beta2=beta3=beta4=beta5=beta6=0
+# unrestricted model's R-squared
+summary(reg6)$r.squared
+# restricted model's R-squared
+reg0 = lm(lwage ~ 1, data = wages) 
+summary(reg0)$r.squared
+# degrees of freedom for the denominator
+nrow(wages)-nrow(summary(reg6)$coef)
+# degrees of freedom for the numerator (number of restrictions)
+6
+# F-stat
+((summary(reg6)$r.squared-summary(reg0)$r.squared)/6)/
+  ((1-summary(reg6)$r.squared)/(nrow(wages)-nrow(summary(reg6)$coef)))
+# compare it with F stat from regression result
+near(summary(reg6)$fstatistic[1],
+     ((summary(reg6)$r.squared-summary(reg0)$r.squared)/6)/
+       ((1-summary(reg6)$r.squared)/(nrow(wages)-nrow(summary(reg6)$coef))))
+# F-critical value
+qf(0.95, 6, nrow(wages)-nrow(summary(reg6)$coef))
+# compare F-stat and F-critical value
+(((summary(reg6)$r.squared-summary(reg0)$r.squared)/6)/
+  ((1-summary(reg6)$r.squared)/(nrow(wages)-nrow(summary(reg6)$coef)))) > 
+  qf(0.95, 6, nrow(wages)-nrow(summary(reg6)$coef))
+# F test using packaged function
+linearHypothesis(reg6, c("fatheduc=0", "motheduc=0", "IQ=0", "KWW=0", "educ=0", "exper=0"))
+```
+
+Therefore, we reject the null hypothesis. 

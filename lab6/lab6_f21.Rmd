@@ -153,6 +153,11 @@ q = 2
   ((1-summary(reg6)$r.squared)/(nrow(wages)-nrow(summary(reg6)$coef)))
 # F critical value
 qf(0.95, q, nrow(wages)-nrow(summary(reg6)$coef))
+# Is F-stat greater than F-critical value?
+((summary(reg6)$r.squared-summary(reg4)$r.squared)/q)/
+  ((1-summary(reg6)$r.squared)/(nrow(wages)-nrow(summary(reg6)$coef)))>
+  qf(0.95, q, nrow(wages)-nrow(summary(reg6)$coef))
+## Unable to reject the null.
 
 ### Using packaged function to perform F test
 p_load(car)
@@ -187,7 +192,7 @@ near(summary(reg6)$fstatistic[1],
        ((1-summary(reg6)$r.squared)/(nrow(wages)-nrow(summary(reg6)$coef))))
 # F-critical value
 qf(0.95, 6, nrow(wages)-nrow(summary(reg6)$coef))
-# compare F-stat and F-critical value
+# Is F-stat greater than F-critical value?
 (((summary(reg6)$r.squared-summary(reg0)$r.squared)/6)/
   ((1-summary(reg6)$r.squared)/(nrow(wages)-nrow(summary(reg6)$coef)))) > 
   qf(0.95, 6, nrow(wages)-nrow(summary(reg6)$coef))

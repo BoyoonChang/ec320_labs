@@ -46,6 +46,10 @@ head(wages,10)
 ```
 
 ## Multiple Regression in R
+What is simple regression?
+
+What is multiple regression?
+
 We know how to do simple OLS--doing multiple OLS is just one easy step further! Let's run a regression of log wages on education and experience:
 
 ```r
@@ -131,6 +135,19 @@ $$ .0700 \leq \beta_1 \leq .0906$$
 Option 2: Let R tell us. The `tidy()` function will give us the confidence interval if we tell it!
 
 ```r
+tidy(reg1)
+```
+
+```
+## # A tibble: 3 × 5
+##   term        estimate std.error statistic  p.value
+##   <chr>          <dbl>     <dbl>     <dbl>    <dbl>
+## 1 (Intercept)   4.83     0.0929       52.1 0       
+## 2 educ          0.0803   0.00526      15.3 2.86e-49
+## 3 exper         0.0464   0.00331      14.0 2.80e-42
+```
+
+```r
 tidy(reg1, conf.int = T)
 ```
 
@@ -204,41 +221,66 @@ cov(wages$educ, wages$exper)
 ```
 ## [1] -4.759561
 ```
+
+```r
+# calculating omitted variable bias
+reg2$coef[3]*cov(wages$educ, wages$exper)/var(wages$educ)
+```
+
+```
+##       exper 
+## -0.04301362
+```
+
+```r
+# comparing (reg1 educ coef) with (reg2 educ coef+ omv bias)
+near(reg2$coef[2]+reg2$coef[3]*cov(wages$educ, wages$exper)/var(wages$educ), reg1$coef[2]) 
+```
+
+```
+## educ 
+## TRUE
+```
 There is a negative bias from omitting experience.
 
 Let's do another regression.
 
 ```r
 reg3 <- lm(lwage ~ educ + exper + IQ, data = wages) # positive bias from omitting IQ (imperfect proxy for intelligence)
-stargazer(reg1, reg2, reg3, keep.stat = c("rsq", "adj.rsq", "n"), type = "text")
+reg4 <- lm(lwage ~ educ + exper + IQ + KWW, data = wages) 
+
+stargazer(reg1, reg2, reg3, reg4, keep.stat = c("rsq", "adj.rsq", "n"), type = "text")
 ```
 
 ```
 ## 
-## ==========================================
-##                   Dependent variable:     
-##              -----------------------------
-##                          lwage            
-##                 (1)       (2)       (3)   
-## ------------------------------------------
-## educ         0.037***  0.080***  0.069*** 
-##               (0.005)   (0.005)   (0.006) 
-##                                           
-## exper                  0.046***  0.048*** 
-##                         (0.003)   (0.003) 
-##                                           
-## IQ                               0.004*** 
-##                                   (0.001) 
-##                                           
-## Constant     5.816***  4.835***  4.587*** 
-##               (0.065)   (0.093)   (0.104) 
-##                                           
-## ------------------------------------------
-## Observations   1,604     1,604     1,604  
-## R2             0.041     0.146     0.159  
-## Adjusted R2    0.040     0.145     0.158  
-## ==========================================
-## Note:          *p<0.1; **p<0.05; ***p<0.01
+## ================================================
+##                      Dependent variable:        
+##              -----------------------------------
+##                             lwage               
+##                (1)      (2)      (3)      (4)   
+## ------------------------------------------------
+## educ         0.037*** 0.080*** 0.069*** 0.058***
+##              (0.005)  (0.005)  (0.006)  (0.006) 
+##                                                 
+## exper                 0.046*** 0.048*** 0.041***
+##                       (0.003)  (0.003)  (0.004) 
+##                                                 
+## IQ                             0.004*** 0.003***
+##                                (0.001)  (0.001) 
+##                                                 
+## KWW                                     0.006***
+##                                         (0.002) 
+##                                                 
+## Constant     5.816*** 4.835*** 4.587*** 4.672***
+##              (0.065)  (0.093)  (0.104)  (0.106) 
+##                                                 
+## ------------------------------------------------
+## Observations  1,604    1,604    1,604    1,604  
+## R2            0.041    0.146    0.159    0.167  
+## Adjusted R2   0.040    0.145    0.158    0.165  
+## ================================================
+## Note:                *p<0.1; **p<0.05; ***p<0.01
 ```
 How are IQ and education correlated? Check the OVB formula again.
 Here, $\beta_3 = .004$ which is positive. We can check the covariance to get the sign of the bias:
@@ -326,6 +368,69 @@ $$F = \frac{(R^2_u - R^2_r)/q}{(1-R^2_u)/(n-k-1)}$$
 The easy way and have R do it for us: Load the `car` package to use this function:
 
 ```r
+## H0: beta5=beta6=0
+# unrestricted model's R-squared
+summary(reg6)$r.squared
+```
+
+```
+## [1] 0.169627
+```
+
+```r
+# restricted model's R-squared
+summary(reg4)$r.squared
+```
+
+```
+## [1] 0.1673504
+```
+
+```r
+# degrees of freedom for denominator
+nrow(wages)-nrow(summary(reg6)$coef)
+```
+
+```
+## [1] 1597
+```
+
+```r
+# degrees of freedom for numerator (number of restriction)
+q = 2
+# F statistic
+((summary(reg6)$r.squared-summary(reg4)$r.squared)/q)/
+  ((1-summary(reg6)$r.squared)/(nrow(wages)-nrow(summary(reg6)$coef)))
+```
+
+```
+## [1] 2.189213
+```
+
+```r
+# F critical value
+qf(0.95, q, nrow(wages)-nrow(summary(reg6)$coef))
+```
+
+```
+## [1] 3.001359
+```
+
+```r
+# Is F-stat greater than F-critical value?
+((summary(reg6)$r.squared-summary(reg4)$r.squared)/q)/
+  ((1-summary(reg6)$r.squared)/(nrow(wages)-nrow(summary(reg6)$coef)))>
+  qf(0.95, q, nrow(wages)-nrow(summary(reg6)$coef))
+```
+
+```
+## [1] FALSE
+```
+
+```r
+## Unable to reject the null.
+
+### Using packaged function to perform F test
 p_load(car)
 linearHypothesis(reg6, c("fatheduc=0", "motheduc=0"))
 ```
@@ -345,3 +450,119 @@ linearHypothesis(reg6, c("fatheduc=0", "motheduc=0"))
 ## 2   1597 233.93  2   0.64137 2.1892 0.1123
 ```
 
+
+### Another example of F-test
+Suppose the null hypothesis is:
+$$H_0\text{: } \beta_1 = \beta_2  = \beta_3  = \beta_4  = \beta_5  = \beta_6 = 0.$$
+The null hypothesis is that every explanatory variable has no effect on log wage.
+
+We could calculate F-stat as the following: 
+
+
+```r
+## H0: beta1=beta2=beta3=beta4=beta5=beta6=0
+# unrestricted model's R-squared
+summary(reg6)$r.squared
+```
+
+```
+## [1] 0.169627
+```
+
+```r
+# restricted model's R-squared
+reg0 = lm(lwage ~ 1, data = wages) 
+summary(reg0)$r.squared
+```
+
+```
+## [1] 0
+```
+
+```r
+# degrees of freedom for the denominator
+nrow(wages)-nrow(summary(reg6)$coef)
+```
+
+```
+## [1] 1597
+```
+
+```r
+# degrees of freedom for the numerator (number of restrictions)
+6
+```
+
+```
+## [1] 6
+```
+
+```r
+# F-stat
+((summary(reg6)$r.squared-summary(reg0)$r.squared)/6)/
+  ((1-summary(reg6)$r.squared)/(nrow(wages)-nrow(summary(reg6)$coef)))
+```
+
+```
+## [1] 54.37201
+```
+
+```r
+# compare it with F stat from regression result
+near(summary(reg6)$fstatistic[1],
+     ((summary(reg6)$r.squared-summary(reg0)$r.squared)/6)/
+       ((1-summary(reg6)$r.squared)/(nrow(wages)-nrow(summary(reg6)$coef))))
+```
+
+```
+## value 
+##  TRUE
+```
+
+```r
+# F-critical value
+qf(0.95, 6, nrow(wages)-nrow(summary(reg6)$coef))
+```
+
+```
+## [1] 2.10425
+```
+
+```r
+# Is F-stat greater than F-critical value?
+(((summary(reg6)$r.squared-summary(reg0)$r.squared)/6)/
+  ((1-summary(reg6)$r.squared)/(nrow(wages)-nrow(summary(reg6)$coef)))) > 
+  qf(0.95, 6, nrow(wages)-nrow(summary(reg6)$coef))
+```
+
+```
+## [1] TRUE
+```
+
+```r
+# F test using packaged function
+linearHypothesis(reg6, c("fatheduc=0", "motheduc=0", "IQ=0", "KWW=0", "educ=0", "exper=0"))
+```
+
+```
+## Linear hypothesis test
+## 
+## Hypothesis:
+## fatheduc = 0
+## motheduc = 0
+## IQ = 0
+## KWW = 0
+## educ = 0
+## exper = 0
+## 
+## Model 1: restricted model
+## Model 2: lwage ~ educ + exper + IQ + KWW + fatheduc + motheduc
+## 
+##   Res.Df    RSS Df Sum of Sq      F    Pr(>F)    
+## 1   1603 281.72                                  
+## 2   1597 233.93  6    47.788 54.372 < 2.2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+Therefore, we reject the null hypothesis. 

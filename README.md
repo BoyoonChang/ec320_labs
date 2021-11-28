@@ -50,3 +50,7 @@
   - Intro to F-test
   
 - Lab material: [Rmarkdown](lab6/lab6_f21.Rmd), [Markdown](lab6/lab6_f21.md)
+
+## Lab7
+- Goals: 
+  - Problem Set 4 help session  
